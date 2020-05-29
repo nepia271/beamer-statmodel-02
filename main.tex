@@ -1,5 +1,5 @@
-\documentclass[dvipdfmx,cjk]{beamer}
-% \documentclass[dvipdfmx,cjk,handout]{beamer}
+% \documentclass[dvipdfmx,cjk]{beamer}
+\documentclass[dvipdfmx,cjk,handout]{beamer}
 
 %
 % Choose how your presentation looks.
@@ -35,7 +35,7 @@
 \usepackage[T1]{fontenc}
 
 \title{確率モデル入門\\確率の用語整理、確率変数、確率分布}
-\author{nepia271}
+\author{nepia}
 \institute{Liberal Arts for Tech}
 \date{2020/05/30}
 
@@ -89,13 +89,16 @@
 \begin{itemize}
     \item なぜ「確率」が必要なのか？
     \item 確率の用語整理
-    \item 確率変数とは？確率分布とは？
+    \item 確率変数、確率分布
+    \item 離散確率分布、連続確率分布
     \item Pythonで例を見る
         \begin{itemize}
         \item 離散確率分布
         \item 連続確率分布
         \item 観測データの分布への収束
         \end{itemize}
+    \item まとめ
+    \item ハンズオン
 \end{itemize}
 
 \end{frame}
@@ -133,18 +136,20 @@
 
 \begin{itemize}
 
+    \item しかし踏み込んで "背後の法則" を考えたい \pause
+
     \item 「統計モデル」になぜ興味があるのか\pause
         \begin{itemize}
         \item データそのものではなく、\\その背後にある "原則" "真理" が知りたいから\\\pause
-        例）データからわかる、コインの歪み方とは？\pause
         \item しかも"定量的"に知りたい\\ \pause
-        →（データから）どれくらいの数値で歪んでいるのか\\ \pause
-        →（数値の推定が）どれくらい信頼できるのか\\ \pause
-        （「一般に、サンプル数が多いほど信頼できる」とは言うけれど？）
+        正規分布だとして \\ \pause
+        ・平均はいくつなのか \\ \pause
+        ・その平均はどれくらい信頼できるのか \\ \pause
+        「一般に、サンプル数が多いほど信頼できる」とは言うけれど？
         \end{itemize}
         
     \pause
-    \item たとえば「統計モデリング」 \pause
+    \item 「統計モデリング」では \pause
     \pause
         \begin{itemize}
         \item 実世界のデータから筋のよい「確率モデル」を記述したい
@@ -155,18 +160,19 @@
 
 \end{itemize}
 
+\vskip 0.3cm
+
 データがまず与えられる。\\ \pause
-その背後にある "原則" "真理" が知りたくてモデルを考える。\\ \pause
-→ データの背後について定量的に議論するためには、\\
-確率の知識は必要！
+その背後にある "原則" "真理" を考える。\\ \pause
+→ 考える材料として確率の知識が必要！
 
 \end{frame}
 
 
 %--------------------------------%
-\begin{frame}{まずは確率の用語整理から……}
+\begin{frame}{まずは確率の用語整理から}
 
-※資料からかいつまんで紹介\pause
+※かいつまんで紹介\pause
 
 \vskip 1cm
 
@@ -194,7 +200,7 @@
 確率変数とは、値が確率である変数です。\\
 ランダムに値を取るのが特徴です。\pause
 
-\vskip 1cm
+\vskip 0.3cm
 
 \begin{itemize}
 
@@ -222,7 +228,7 @@
 
 
 %--------------------------------%
-\begin{frame}{余談：ランダムという概念は実はとっても難しい} \pause
+\begin{frame}{余談：ランダムは実はとってもむずかしい} \pause
 
 % ランダムの概念はどう発展してきたか
 % http://www2.odn.ne.jp/tadaki/miyabe2-lss2012.pdf
@@ -233,10 +239,10 @@
     場合の数で考えられていた \pause
     \item 確率 ＝ 求める事象/全事象 \\
     （ラプラスによる定義 古典的確率） \pause
-    \item しかしこれでは、上手に表現することができないこともあった
-    （すべての場合の数を数えるの無理なことがある） \pause
+    \item できないことも多かった \\
+    （すべての事象を数え上げるのがの無理なケースなど） \pause
 
-    \item だが、20世紀初頭のこと \\ \pause
+    \item 20世紀初頭 \\ \pause
     アンドレイ・コルモゴロフというロシアの数学者が、 \\
     確率論の公理化を、みごと完成させた！\\
     （公理的確率論） \pause
@@ -250,9 +256,9 @@
 % しかしながら、【ランダムに値を取ること】を明示的に 定義することは困難です。
 % ランダムとは何かを 数学的に特徴づけることは非常に難しいからです。Kolmogorov が最後まで 挑戦していた課題です。
 
-\vskip 1cm
+\vskip 0.3cm
 
-（結論）ランダムも、確率変数も、むずかしいので、\\
+ランダムはむずかしい、確率変数もむずかしいので、\\
 深く考えないことがオススメです。
 
 % どうしても興味のある人はWikipediaで
@@ -316,7 +322,7 @@
 
 
 %--------------------------------%
-\begin{frame}{よくわからない} \pause
+\begin{frame}{コードで色々見てみましょう} \pause
 
 \begin{itemize}
     \item Pythonで動かしてみましょう
@@ -352,14 +358,14 @@
 \begin{frame}{講義のまとめ} \pause
 
 \begin{itemize}
-    \item データが与えられ、背後の法則を考えたい \pause
+    \item データが与えられたら、背後の法則を考えたい \pause
     \item 法則を考えるために「確率モデル」が利用される \pause
-    \item 確率への理解が必要になる（出力を理解することが必要） \pause
-    \item しかし、確率の基礎事項は混乱しやすい\\
-          確率を一発で理解しようとするのは大変…… \pause
+    \item 考えるには確率への理解がどうしても必要 \pause
+    \item しかし、確率は基礎からしてむずかしく混乱しやすい\\
+          一発で理解しようとするのは大変…… \pause
 \end{itemize}
 
-\vskip 1cm
+\vskip 0.3cm
 ではどうすれば？ \pause
 
 \begin{itemize}
@@ -371,7 +377,7 @@
         \end{itemize}
 \end{itemize} \pause
 
-\vskip 1cm
+\vskip 0.3cm
 少し休憩をしたのち、ハンズオンに入ります。
 
 \end{frame}
