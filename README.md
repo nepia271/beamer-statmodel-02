@@ -18,6 +18,10 @@ $ latexmk
 ## Build Server
 
 ```
-$ latexmk
+$ latexmk -pvc
 ```
 
+
+## Beamerでプレゼンを作るこつ
+
+- ローカルで書いたほうが楽
