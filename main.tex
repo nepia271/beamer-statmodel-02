@@ -1,6 +1,369 @@
-\documentclass[dvipdfmx]{beamer}
+\documentclass[dvipdfmx,cjk]{beamer}
+
+%
+% Choose how your presentation looks.
+%
+% For more themes, color themes and font themes, see:
+% http://deic.uab.es/~iblanes/beamer_gallery/index_by_theme.html
+%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% プリアンブル
+
+% 和文の既定をゴシック体に
+\renewcommand{\kanjifamilydefault}{\gtdefault}
+
+\mode<presentation>
+{
+  \usetheme{default}      % or try Darmstadt, Madrid, Warsaw, ...
+  \usecolortheme{default} % or try albatross, beaver, crane, ...
+  \usefonttheme{default}  % or try serif, structurebold, ...
+  \setbeamertemplate{navigation symbols}{}
+  \setbeamertemplate{caption}[numbered]
+} 
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\title{確率モデル入門\\確率の用語整理および\\確率変数と確率分布}
+\author{nepia271}
+\institute{Liberal Arts for Tech}
+\date{2020/05/30}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 本文
 \begin{document}
+
+
+%--------------------------------%
 \begin{frame}
-Hello World!!!
+  \titlepage
 \end{frame}
+
+
+%--------------------------------%
+%\begin{frame}{Outline}
+%  \tableofcontents
+%\end{frame}
+
+
+%--------------------------------%
+\begin{frame}{講義（セミナー前半）}
+
+\begin{block}{目標}
+    統計を勉強し始めた人が確率を理解しやすくなること
+\end{block}
+
+\vskip 1cm
+
+\begin{block}{アジェンダ}
+    \begin{itemize}
+    \item 試行
+    \item 標本空間と事象
+    \item 確率変数
+    \item 確率分布
+        \begin{itemize}
+        \item 離散確率分布
+        \item 連続確率分布
+        \end{itemize}
+    \end{itemize}
+\end{block}
+
+\end{frame}
+
+
+%--------------------------------%
+\begin{frame}{全体の構成}
+
+\begin{itemize}
+    \item なぜ「確率」が必要なのか？
+    \item 確率の用語整理
+    \item 確率変数とは？
+    \item 確率分布とは？
+    \item Pythonで確率分布の例を見る
+        \begin{itemize}
+        \item 離散確率分布
+        \item 連続確率分布
+        \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+
+%--------------------------------%
+\begin{frame}{なぜ「確率」が必要なのか？（１）}
+
+% 端的にいうと「不確かさを定量的に扱いたい」からです！
+% \vskip 1cm
+
+\begin{itemize}
+
+    \item 「記述統計」ならば「確率」は不要でした
+        \begin{itemize}
+        \item ヒストグラムを書いてデータを概観する
+        \item 平均値、中央値を算出してデータの中心傾向を知る
+        \item 分散を算出してデータの散らばり具合を知る
+        \item ↑これらに確率の知識は不要
+        \end{itemize}
+
+\end{itemize}
+
+\end{frame}
+%--------------------------------%
+\begin{frame}{なぜ「確率」が必要なのか？（２）}
+
+\begin{itemize}
+
+    \item 一方「統計モデル」を使うモチベーションは……
+        \begin{itemize}
+        \item データの背後にある "原則" "真理" が知りたい\\
+        例）データからわかる、歪んだコインを投げて表が出る％は？
+        \item しかも"定量的"に知りたい\\
+        ▶（データから）どれくらい歪んでいるのか\\
+        ▶（パラメータ推定が）どれくらい信頼できるのか\\
+        （「サンプル数が多いほど信頼できる」とは言うけれど？）
+        \end{itemize}
+
+    \item はたまた「統計モデリング」では……
+        \begin{itemize}
+        \item 実世界のデータから筋のよい「確率モデル」を記述したい
+        \item そのモデルがどれくらい本当なのかを議論したい
+        \end{itemize}
+
+    % \item 「不確かさ」を扱うためには「確率」が必要
+    %     \begin{itemize}
+    %     \item 観測されたデータを確率の面から「定量的に」議論するために必要
+    %     \end{itemize}
+
+    % \item >>>> では「確率」が必要です！
+    %     \begin{itemize}
+    %     \item 確率は用語を整理して把握することが大切です
+    %     \end{itemize}
+
+\end{itemize}
+
+\end{frame}
+
+
+%--------------------------------%
+\begin{frame}{まずは確率の用語整理から……}
+
+※資料からかいつまんで紹介
+
+\vskip 1cm
+
+\begin{description}
+
+    \item[> 試行(trial)]\mbox{}\\
+            実験や観測などを行うことです。
+            確率モデルに基づいて論理展開を行っていくにあたっては、
+            試行を行った結果を確率的に解釈していきます。
+
+    \item[> 標本空間(sample space)]\mbox{}\\
+            試行の結果を要素とする集合です。
+
+    \item[> 事象(event)]\mbox{}\\
+            標本空間の部分集合です。
+
+\end{description}
+
+\end{frame}
+
+
+%--------------------------------%
+\begin{frame}{確率変数とは？}
+
+確率変数とは「ランダムな値をとる」変数です
+
+\vskip 1cm
+
+\begin{itemize}
+
+    \item （注意）確率変数は○○ではありません
+        \begin{itemize}
+        \item 確率変数は「とる値の集合」ではありません\\
+                それは「標本空間」です
+        \item 確率変数は「具体的な実現値」ではありません\\
+                それは「試行」です
+        \item 確率変数は「起こりうる事柄」ではありません\\
+                それは「事象」です
+        \end{itemize}
+
+\end{itemize}
+
+\vskip 1cm
+
+（いやあ、難しいですね……）
+
+\end{frame}
+
+
+%--------------------------------%
+\begin{frame}{余談：ランダムという概念は実はとっても難しい}
+
+% ランダムの概念はどう発展してきたか
+% http://www2.odn.ne.jp/tadaki/miyabe2-lss2012.pdf
+
+\begin{itemize}
+    \item 20世紀初頭
+    \item アンドレイ・コルモゴロフというロシアの数学者がいて
+    \item 測度論やルベーグ積分を駆使して定式化
+    \item それまで「ランダム」の概念を\\厳密に数学で表現することはできなかった（らしい）
+\end{itemize}
+
+\vskip 1cm
+
+ランダムも確率変数、むずかしいので、\\
+深く考えないほうがいいかもしれません。
+
+% どうしても興味のある人はWikipediaで
+% 「確率」の「基礎概念の数学的定義」を見てみましょう
+% たぶん、泡吹きます
+
+\end{frame}
+
+
+%--------------------------------%
+\begin{frame}{確率分布とは？}
+
+\begin{itemize}
+
+    \item 「各々の値をとる確率」を表す分布
+        \begin{itemize}
+        \item 例： コインを投げたとき……
+        \item コインが表を取る確率： $50\%$
+        \item コインが裏を取る確率： $50\%$
+        \end{itemize}
+
+    \item ヒストグラムをサンプル数で割ったものと「似ています」
+        \begin{itemize}
+        \item じつのところ「そうではない」のですが
+        \item 無限にデータ数があるなら一致していきます
+        \end{itemize}
+
+\end{itemize}
+
+\end{frame}
+
+
+%--------------------------------%
+\begin{frame}{離散確率分布・連続確率分布}
+
+\begin{itemize}
+
+    \item 離散確率分布とは？
+        \begin{itemize}
+        \item 確率変数$X$が離散値をとる場合の確率分布です
+        \item 例）コインの表裏、サイコロの出目
+        \item 一様分布
+        \item 二項分布
+        \end{itemize}
+
+    \item 連続確率分布とは？
+        \begin{itemize}
+        \item 確率変数$X$が連続値をとる場合の確率分布です
+        \item 例）花弁の長さ、16歳男子の身長
+        \item 正規分布
+        \item ポアソン分布
+        \end{itemize}
+
+\end{itemize}
+
+\end{frame}
+
+
+%--------------------------------%
+\begin{frame}{考えてもよくわからない……}
+
+\begin{itemize}
+    \item Pythonで動かしてみましょう
+    \item 実際に動いている様子で理解のヒントになるかも
+\end{itemize}
+
+\end{frame}
+
+
+%--------------------------------%
+\begin{frame}{離散確率分布の例：サイコロ}
+
+
+\end{frame}
+
+
+%--------------------------------%
+\begin{frame}{連続確率分布の例：正規分布}
+
+
+\end{frame}
+
+
+%--------------------------------%
+\begin{frame}{サンプルを増やすと真の分布に漸近する}
+
+
+\end{frame}
+
+
+
+%--------------------------------%
+\begin{frame}{講義のまとめ}
+
+\begin{itemize}
+    \item 確率モデリングに入門するにはまず確率
+    \item 確率の基礎事項は混同しやすい
+    \item 確率を一発で理解しようとするのは大変
+\end{itemize}
+
+\vskip 1cm
+ではどうすれば？
+
+\begin{itemize}
+    \item ゆっくり丁寧にやることで理解する
+    \item Pythonで動かすことで理解する
+        \begin{itemize}
+        \item 紙とペンでやるよりも
+        \item Pythonのほうがカンタンです
+        \end{itemize}
+\end{itemize}
+
+\vskip 1cm
+少し休憩をしたのち、ハンズオンに入ります。
+
+\end{frame}
+
+
+%--------------------------------%
+\begin{frame}{ハンズオン}
+
+\begin{itemize}
+    \item sklearn.dataset を読み込む
+    \item 適当なヒストグラムを書く
+    \item 何の数学的分布に近いか見てみる
+\end{itemize}
+
+\vskip 1cm
+その他、素朴な疑問について\\確率に限らず拾っていく時間とします
+
+\end{frame}
+
+
+%===============================%
 \end{document}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% メモ
+% https://www.hakodate-ct.ac.jp/~tokai/tokai/doc2013/souzou4.html
+% 確率変数と確率分布
+% Q1. 確率変数とは何か?
+% 難Q2. 普通の変数と確率変数の違いは何か?
+% Q3. 連続確率分布とは何か?
+% Q4. 離散確率分布とは何か?
+% 難Q5. 離散確率分布における確率関数とは何か?
+% 難Q6. 連続確率分布における密度関数とは何か?
+% 難Q7. 身近にある離散確率分布と連続確率分布の例をそれぞれ挙げよ
+
+
