@@ -1,0 +1,11 @@
+
+[ 確率・統計 講義ノート２０１８ ]
+
+http://www.kurims.kyoto-u.ac.jp/~kyodo/kokyuroku/contents/pdf/1736-05.pdf
+http://www.math.sci.ehime-u.ac.jp/~ishikawa/
+
+私は現在、主に 確率過程 に関する研究に従事しています。 とくに、Levy過程、および、
+Levy過程によってdriveされる確率微分方程式の解としてあらわれるジャンプ型過程に付いて、
+そのtransition densityの存在と漸近評価について、研究しています。
+
+
