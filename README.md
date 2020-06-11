@@ -5,7 +5,7 @@
 
 ## Template
 
-Overleafから適当に拾ってきた
+Overleafから適当に
 
 
 ## Build
@@ -20,8 +20,3 @@ $ latexmk
 ```
 $ latexmk -pvc
 ```
-
-
-## Beamerでプレゼンを作るこつ
-
-- ローカルで書いたほうが楽
